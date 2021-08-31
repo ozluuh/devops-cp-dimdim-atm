@@ -20,7 +20,7 @@ public class Customer {
 
     private String name;
 
-    @OneToOne(cascade = { CascadeType.PERSIST })
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn
     private Account account;
 }
