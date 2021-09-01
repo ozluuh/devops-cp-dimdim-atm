@@ -7,5 +7,4 @@ import br.com.dimdim.atm.model.Customer;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
-
 }

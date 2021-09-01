@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.dimdim.atm.model.AccountType;
+import br.com.dimdim.atm.model.BankStatement;
 import br.com.dimdim.atm.model.Customer;
+import br.com.dimdim.atm.model.TransactionType;
+import br.com.dimdim.atm.repository.BankStatementRepository;
 import br.com.dimdim.atm.repository.CustomerRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,8 @@ import lombok.extern.log4j.Log4j2;
 public class CustomerController {
 
     private final CustomerRepository repo;
+
+    private final BankStatementRepository bankRepo;
 
     @PostMapping
     public ResponseEntity<Customer> create(@RequestBody final Customer customer, UriComponentsBuilder uriBuilder) {
@@ -79,26 +84,33 @@ public class CustomerController {
 
     @PostMapping("/{id}/bankServices/deposit")
     public ResponseEntity<Object> deposit(@PathVariable Long id, @RequestParam(name = "value") Double value) {
-        if (value == null) {
-            return ResponseEntity.badRequest().build();
-        }
+        if (value == null) return ResponseEntity.badRequest().build();
         
         ResponseEntity<Customer> response = show(id);
 
-        if(! response.hasBody()){
-            return ResponseEntity.notFound().build();
-        }
+        if(! response.hasBody()) return ResponseEntity.notFound().build();
 
         Customer customer = response.getBody();
 
         customer.getAccount().deposit(value);
 
-        repo.save(customer);
-        log.info("Deposited");
+        BankStatement history = BankStatement
+                                    .builder()
+                                    .transactionType(TransactionType.C)
+                                    .value(value)
+                                    .balance(customer.getAccount().getBalance())
+                                    .history("Crédito em conta")
+                                    .customer(customer)
+                                    .build();
 
+        repo.save(customer);
+        log.info("Deposit");
+        bankRepo.save(history);
+        log.info("Deposit history created");
+        
         return ResponseEntity.ok().build();
     }
-
+    
     @PostMapping("/{id}/bankServices/withdraw")
     public ResponseEntity<Object> withdraw(@PathVariable Long id, @RequestParam(name = "value") Double value){
         if(value == null) return ResponseEntity.badRequest().build();
@@ -111,10 +123,25 @@ public class CustomerController {
 
         customer.getAccount().withdraw(value);
 
+        BankStatement history = BankStatement
+                                    .builder()
+                                    .transactionType(TransactionType.D)
+                                    .value(value)
+                                    .balance(customer.getAccount().getBalance())
+                                    .history("Débito em conta")
+                                    .customer(customer)
+                                    .build();
+        
         repo.save(customer);
         log.info("Withdraw");
+        bankRepo.save(history);
+        log.info("Withdraw history created");
         
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{id}/bankServices/statement")
+    public List<BankStatement> statement(@PathVariable Long id) {
+        return bankRepo.findAllByCustomerId(id);
+    }
 }
