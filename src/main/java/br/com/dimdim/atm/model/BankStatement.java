@@ -1,12 +1,16 @@
 package br.com.dimdim.atm.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,12 +25,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Entity
+@Table(name = "bankstatement")
 public class BankStatement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "transaction_type")
     private TransactionType transactionType;
 
     private Double value;
@@ -36,7 +43,8 @@ public class BankStatement {
     private String history;
 
     @Builder.Default
-    private final LocalDateTime movementDate = LocalDateTime.now();
+    @Column(name="movement_date")
+    private final LocalDate movementDate = LocalDate.now();
 
     @ManyToOne
     @JsonIgnore

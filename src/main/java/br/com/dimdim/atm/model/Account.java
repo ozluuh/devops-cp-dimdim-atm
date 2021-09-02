@@ -23,14 +23,16 @@ public class Account {
     @Column(nullable = false)
     private String agency;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "account_number")
     private String number;
 
     private Double balance = 0d;
 
+    @Column(name="account_limit")
     private Double accountLimit;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "account_type")
     private AccountType type = AccountType.DEFAULT;
 
     public void withdraw(Double value) {
