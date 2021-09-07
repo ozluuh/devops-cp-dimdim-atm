@@ -48,17 +48,18 @@ public class AppController {
 			return "redirect:/login";
 		}
 
-		Object sessionCustomer = session.getAttribute(CUSTOMER_ATTRIBUTE);
-		if (customer == null || !customer.equals(sessionCustomer)) {
-			customer = (Customer) sessionCustomer;
-			session.removeAttribute(CUSTOMER_ATTRIBUTE);
-		}
-
 		return "redirect:/app";
 	}
 
 	@GetMapping
-	public String home(Model model) {
+	public String home(HttpSession session, Model model) {
+		Object sessionCustomer = session.getAttribute(CUSTOMER_ATTRIBUTE);
+		if (customer == null || !customer.equals(sessionCustomer)) {
+			customer = (Customer) sessionCustomer;
+			session.removeAttribute(CUSTOMER_ATTRIBUTE);
+			log.info("CustomerObjectSessionUpdated");
+		}
+
 		Map<String, Double> items = new HashMap<>();
 		items.put("C", .0);
 		items.put("D", .0);
