@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org" th:replace="layouts/base :: layout(~{::title}, ~{::main}, transaction)">
+    <title>Transações | ATM</title>
+    <body>
+        <main>
+            <form method="POST" class="mx-auto" data-th-object="${bankStatement}">
+                <div class="form-group row">
+                    <label for="type" class="col-sm-2 col-form-label">Tipo</label>
+                    <div class="col-sm-10">
+                        <select name="type" id="type" class="custom-select" data-th-field="*{transactionType}">
+                            <option
+                                data-th-each="topic : ${T(br.com.dimdim.atm.model.TransactionType).values()}"
+                                data-th-value="${topic}"
+                                data-th-text="${topic.description}"
+                            ></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="value" class="col-sm-2 col-form-label">Valor</label>
+                    <div class="col-sm-10">
+                        <input
+                            name="value"
+                            type="number"
+                            min="1"
+                            max="999999999999999"
+                            class="form-control"
+                            id="value"
+                            data-th-field="*{value}"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-sm-2 col-form-label">Descrição</label>
+                    <div class="col-sm-10">
+                        <input
+                            name="description"
+                            type="text"
+                            class="form-control"
+                            id="description"
+                            data-th-field="*{history}"
+                            maxlength="50"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary float-right">Confirmar</button>
+                <a class="btn btn-outline-danger float-right mx-2" data-th-href="@{/app}">Cancelar</a>
+            </form>
+        </main>
+    </body>
+</html>

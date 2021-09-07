@@ -1,15 +1,122 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=, shrink-to-fit=no"
-        />
-        <title>Home</title>
-    </head>
+<html lang="en" xmlns:th="http://thymeleaf.org" th:replace="layouts/base :: layout(~{::title}, ~{::main}, dashboard)">
+    <title>Dashboard | ATM</title>
     <body>
-        <h2>Principal</h2>
+        <!-- Content Section -->
+        <main>
+            <!-- Dashboard cards container -->
+            <section class="dashcards row mb-md-4">
+                <div class="col-md-6 col-lg-3 mb-2">
+                    <div data-th-replace="fragments/DashCard :: item(~{::#balanceTitle}, ~{::#balance}, primary)">
+                        <span id="balanceTitle">Saldo</span>
+                        <div class="d-flex justify-content-between" id="balance">
+                            R$
+                            <span
+                                data-th-text="${#numbers.formatDecimal(customer.account.balance, 1, 'POINT', 2, 'COMMA')}"
+                            ></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3 mb-2">
+                    <div data-th-replace="fragments/DashCard :: item(~{::#inboundTitle},~{::#inbound}, success)">
+                        <span id="inboundTitle">Total de entradas</span>
+
+                        <div class="d-flex justify-content-between" id="inbound">
+                            R$
+                            <span data-th-text="${#numbers.formatDecimal(C, 1, 'POINT', 2, 'COMMA')}">0,00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3 mb-2">
+                    <div data-th-replace="fragments/DashCard :: item(~{::#outboundTitle},~{::#outbound}, danger)">
+                        <span id="outboundTitle">Total de saídas</span>
+
+                        <div class="d-flex justify-content-between" id="outbound">
+                            R$
+                            <span data-th-text="${#numbers.formatDecimal(D, 1, 'POINT', 2, 'COMMA')}">0,00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3 mb-2">
+                    <div data-th-replace="fragments/DashCard :: item(~{::#limit-title},~{::#limit-content}, warning)">
+                        <span id="limit-title">
+                            Cheque especial <br />
+                            (Limite: R$
+                            <span
+                                data-th-text="${#numbers.formatDecimal(customer.account.accountLimit, 1, 'POINT', 2, 'COMMA')}"
+                            ></span
+                            >)
+                        </span>
+                        <div class="d-flex justify-content-between" id="limit-content">
+                            R$
+                            <span
+                                data-th-text="(${customer.account.balance} &lt; 0)? ${#numbers.formatDecimal(customer.account.accountLimit - (customer.account.accountLimit + customer.account.balance), 1, 'POINT', 2, 'COMMA')} : _"
+                                >0,00</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="main-content">
+                <div class="table-responsive-sm">
+                    <table class="table table-light table-striped table-bordered">
+                        <caption>
+                            Extrato de cliente
+                        </caption>
+                        <thead class="thead-dark">
+                            <tr class="text-center">
+                                <th scope="col">Data de Movimento</th>
+                                <th scope="col">Histórico</th>
+                                <th scope="col">Entrada</th>
+                                <th scope="col">Saída</th>
+                                <th scope="col">Saldo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:unless="${statements}">
+                                <td colspan="5" class="text-muted text-center">Não há movimentações disponíveis</td>
+                            </tr>
+                            <tr th:if="${statements}" th:each="statement : ${statements}">
+                                <th scope="row" class="collapse">1</th>
+                                <td data-th-text="${#temporals.format(statement.movementDate, 'dd/MM/yyyy')}"></td>
+                                <td data-th-text="${statement.history}"></td>
+                                <td>
+                                    <th:block th:if="${statement.transactionType.name() eq 'C'}">
+                                        <div class="d-flex justify-content-between text-success">
+                                            +
+                                            <span
+                                                data-th-text="${#numbers.formatDecimal(statement.value, 1, 'POINT', 2, 'COMMA')}"
+                                            ></span>
+                                        </div>
+                                    </th:block>
+                                </td>
+                                <td>
+                                    <th:block th:unless="${statement.transactionType.name() eq 'C'}">
+                                        <div class="d-flex justify-content-between text-danger">
+                                            -
+                                            <span
+                                                data-th-text="${#numbers.formatDecimal(statement.value, 1, 'POINT', 2, 'COMMA')}"
+                                            ></span>
+                                        </div>
+                                    </th:block>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-between">
+                                        R$
+                                        <span
+                                            data-th-text="${#numbers.formatDecimal(statement.balance, 1, 'POINT', 2, 'COMMA')}"
+                                        ></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
     </body>
 </html>

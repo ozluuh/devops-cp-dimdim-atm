@@ -6,8 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
-import br.com.dimdim.atm.model.Customer;
 import br.com.dimdim.atm.repository.CustomerRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +34,14 @@ public class LoginController {
 			session.setAttribute("errorMessage", "Realize o acesso novamente.");
 		}
 		return "login";
+	}
+
+	@PostMapping("/login")
+	public ModelAndView home(HttpSession session, String number, String agency) {
+		repo.findCustomerByAccountNumberAndAgency(number, agency)
+				.ifPresent(customer -> session.setAttribute(CUSTOMER_ATTRIBUTE, customer));
+
+		return new ModelAndView("forward:/app/validation");
 	}
 
 	@GetMapping("/logout")
