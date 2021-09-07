@@ -5,64 +5,60 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta
             name="viewport"
-            content="width=device-width, initial-scale=, shrink-to-fit=no"
+            content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
         />
-        <title>Login</title>
+        <title>Login | ATM</title>
         <link rel="stylesheet" href="css/bootstrap.css" />
     </head>
     <body style="background-color: #e7e7e7">
-        <main
-            class="
-                container
-                d-flex
-                align-items-center
-                justify-content-center
-                pb-5
-            "
-            style="height: 100vh"
-        >
-            <form
-                action="/login"
-                method="POST"
-                class="d-flex flex-column align-items-center"
-                th:object="${customer}"
-            >
+        <div class="messages position-fixed p-3" style="z-index: 5; right: 0">
+            <th:block th:if="${session.error}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <h4 class="alert-heading" data-th-text="${session.errorTitle}"></h4>
+                    <p class="mb-0" data-th-text="${session.errorMessage}"></p>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </th:block>
+        </div>
+
+        <main class="container d-flex align-items-center justify-content-center pb-5" style="height: 100vh">
+            <form action="/login" method="POST" class="d-flex flex-column align-items-center">
                 <img
-                    src="https://picsum.photos/id/237/200/300"
+                    data-th-src="@{/img/logo.jpeg}"
                     alt="Logo Dim Dim"
-                    class="d-block rounded-circle"
-                    style="width: 50%; max-height: 100px; object-fit: cover"
+                    class="d-block rounded-circle bg-white"
+                    style="width: 50%; height: 100px; object-fit: contain"
                 />
 
                 <div class="form-group has-validation">
                     <label for="agency">Agência</label>
                     <input
                         id="account_agency"
-                        name="account_agency"
+                        name="agency"
                         class="form-control"
                         placeholder="e.g. 1611"
-                        th:field="*{account.agency}"
+                        pattern="^[0-9]{4}$"
                         required
                     />
-                    <small class="text-muted" th:errors="*{account.agency}"
-                        >Agência deve ser preenchida</small
-                    >
+                    <small class="text-muted">Agência deve ser preenchida com 4 dígitos</small>
                 </div>
 
                 <div class="form-group mb-4">
                     <label for="account_number">Conta</label>
                     <input
                         id="account_number"
-                        name="account_number"
+                        name="number"
                         class="form-control"
-                        placeholder="e.g. 65399-7"
-                        th:field="*{account.number}"
+                        placeholder="e.g. 653997"
+                        pattern="^[0-9]{6}$"
                         required
                     />
-                    <small class="text-muted">Conta deve ser preenchida</small>
+                    <small class="text-muted">Conta deve ser preenchida com 6 dígitos</small>
                 </div>
 
-                <button class="btn btn-primary form-control">Acessar</button>
+                <button type="submit" class="btn btn-primary form-control">Acessar</button>
             </form>
         </main>
         <footer class="mt-5 fixed-bottom d-flex align-items-center flex-column">
