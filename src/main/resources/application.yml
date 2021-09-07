@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@<HOST>:<PORT>:<DATABASE_NAME>
-    username: <USER>
-    password: <PASSWORD>
+    url: jdbc:oracle:thin:@${env.DBHOST}:${env.DBPORT:1521}:${env.DBNAME:orcl}
+    username: ${env.DBUSER}
+    password: ${env.DBPASS}
   jpa:
     hibernate:
       ddl-auto: update

@@ -72,6 +72,8 @@ Antes de começar, você vai precisar ter instalado em sua máquina as seguintes
 
 Após instalar e configurar as ferramentas de sua preferência, ao executar a aplicação pela primeira vez, será criada a estrutura de tabelas necessárias. Para visualizá-las acesse o seguinte diretório `src/main/resources/schema.sql`
 
+:warning: Para que a aplicação consiga acessar a base de dados, edite o arquivo `.env.template` conforme instruções dentro do arquivo.
+
 &#x1F4A1; Você pode alimentar manualmente a base de dados, executando o script `src/main/resources/data.sql`.
 
 #### Executando a aplicação
