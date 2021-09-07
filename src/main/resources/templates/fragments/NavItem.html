@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body>
+        <ul>
+            <li class="nav-item m-1" data-th-fragment="item(title, url, active, icon)">
+                <a
+                    data-th-href="@{${url}}"
+                    th:classappend="${active}? active"
+                    class="
+                        nav-link
+                        d-flex
+                        align-items-baseline
+                        justify-content-center justify-content-md-between
+                        bg-secondary
+                        text-white
+                    "
+                    role="button"
+                    aria-disabled="false"
+                >
+                    <span class="collapse mr-4 text--md show--md" data-th-text="${title} ?: _">Sample Item</span>
+                    <i class="bi" th:classappend="${icon}? |bi-${icon}|"></i>
+                </a>
+            </li>
+        </ul>
+    </body>
+</html>

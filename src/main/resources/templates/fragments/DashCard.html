@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body>
+        <div
+            class="alert mb-0 h-100 d-flex flex-column justify-content-between"
+            role="alert"
+            data-th-classappend="|alert-${color}|"
+            data-th-fragment="item(title, content, color)"
+        >
+            <small class="text-monospace text-center font-weight-bold d-block mb-3">
+                <th:block data-th-replace="${title}" />
+            </small>
+            <div data-th-insert="${content}"></div>
+        </div>
+    </body>
+</html>
