@@ -1,5 +1,7 @@
 package br.com.dimdim.atm.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 import br.com.dimdim.atm.model.exceptions.NoEnoughCashException;
 
@@ -14,10 +17,11 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Account {
+@SequenceGenerator(name = "account", allocationSize = 1, initialValue = 1, sequenceName = "sq_account")
+public class Account implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account")
     private Long id;
 
     @Column(nullable = false)
@@ -26,7 +30,7 @@ public class Account {
     @Column(nullable = false, unique = true, name = "account_number")
     private String number;
 
-    private Double balance = 0d;
+    private Double balance = .00;
 
     @Column(name="account_limit")
     private Double accountLimit;

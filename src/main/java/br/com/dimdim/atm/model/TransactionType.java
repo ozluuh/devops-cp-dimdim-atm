@@ -1,5 +1,12 @@
 package br.com.dimdim.atm.model;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum TransactionType {
-    C, D
+    C("Depósito"), D("Saque");
+
+	private final String description;
 }
