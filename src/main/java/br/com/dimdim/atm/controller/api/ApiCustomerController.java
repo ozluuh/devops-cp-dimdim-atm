@@ -2,6 +2,7 @@ package br.com.dimdim.atm.controller.api;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -83,9 +83,12 @@ public class ApiCustomerController {
     }
 
     @PostMapping("/{id}/bankServices/deposit")
-    public ResponseEntity<Object> deposit(@PathVariable Long id, @RequestParam(name = "value") Double value) {
-        if (value == null) return ResponseEntity.badRequest().build();
-        
+    public ResponseEntity<Object> deposit(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        if (body == null) return ResponseEntity.badRequest().build();
+
+		Double value = Double.valueOf(body.get("value").toString());
+		String description = (String) body.get("description");
+
         ResponseEntity<Customer> response = show(id);
 
         if(! response.hasBody()) return ResponseEntity.notFound().build();
@@ -99,7 +102,7 @@ public class ApiCustomerController {
                                     .transactionType(TransactionType.C)
                                     .value(value)
                                     .balance(customer.getAccount().getBalance())
-                                    .history("Crédito em conta")
+                                    .history(description)
                                     .customer(customer)
                                     .build();
 
@@ -107,14 +110,17 @@ public class ApiCustomerController {
         log.info("Deposit");
         bankRepo.save(history);
         log.info("Deposit history created");
-        
+
         return ResponseEntity.ok().build();
     }
-    
+
     @PostMapping("/{id}/bankServices/withdraw")
-    public ResponseEntity<Object> withdraw(@PathVariable Long id, @RequestParam(name = "value") Double value){
-        if(value == null) return ResponseEntity.badRequest().build();
-        
+    public ResponseEntity<Object> withdraw(@PathVariable Long id, @RequestBody Map<String, Object> body){
+        if(body == null) return ResponseEntity.badRequest().build();
+
+		Double value = Double.valueOf(body.get("value").toString());
+		String description = (String) body.get("description");
+
         ResponseEntity<Customer> response = show(id);
 
         if(!response.hasBody()) return ResponseEntity.notFound().build();
@@ -128,15 +134,15 @@ public class ApiCustomerController {
                                     .transactionType(TransactionType.D)
                                     .value(value)
                                     .balance(customer.getAccount().getBalance())
-                                    .history("Débito em conta")
+                                    .history(description)
                                     .customer(customer)
                                     .build();
-        
+
         repo.save(customer);
         log.info("Withdraw");
         bankRepo.save(history);
         log.info("Withdraw history created");
-        
+
         return ResponseEntity.ok().build();
     }
 
@@ -144,45 +150,4 @@ public class ApiCustomerController {
     public List<BankStatement> statement(@PathVariable Long id) {
         return bankRepo.findAllByCustomerId(id);
     }
-
-    // public static void defineNota(Integer value) {
-    // List<Integer> nota = List.of(200, 100, 50, 20, 10, 5, 2);
-    // Map<Integer, Integer> notas = new HashMap<>();
-    // int count = 0;
-    // int base = value;
-
-    // do {
-    // Integer atual = nota.get(count);
-    // System.out.println("\nValor Atual: " + base);
-    // System.out.println("Nota Atual: " + atual);
-
-    // if (base % atual == 1) {
-    // System.out.println("Resta 1, por favor, informe um valor válido");
-    // break; // Remover break e lançar exceção
-    // }
-
-    // if (base % atual == base) {
-    // count++;
-    // System.out.println("Nota incompatível, indo para a próxima");
-    // continue;
-    // }
-
-    // if (base % atual <= base) {
-    // Integer n = notas.getOrDefault(atual, 0);
-
-    // System.out.println("Resto: " + base % atual);
-    // System.out.println("Qtd nota armazenada: " + (n + 1));
-
-    // notas.put(atual, ++n);
-    // base -= atual;
-    // }
-
-    // System.out.println("Count: " + count);
-    // } while (count < nota.size() && base > 0);
-
-    // System.out.println("\nSaque de: " + value);
-    // notas.forEach((key, valor) -> System.out.println("Total Nota " + key + ": " +
-    // valor));
-    // }
-
 }
