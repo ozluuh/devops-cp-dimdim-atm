@@ -54,7 +54,9 @@ public class AppController {
 	@GetMapping
 	public String home(HttpSession session, Model model) {
 		Object sessionCustomer = session.getAttribute(CUSTOMER_ATTRIBUTE);
-		if (customer == null || !customer.equals(sessionCustomer)) {
+		log.debug("CustomerObjectOnSession: {}", sessionCustomer);
+		log.debug("CustomerObjectClass: {}", customer);
+		if (customer == null || !customer.equals(sessionCustomer) && sessionCustomer != null) {
 			customer = (Customer) sessionCustomer;
 			session.removeAttribute(CUSTOMER_ATTRIBUTE);
 			log.info("CustomerObjectSessionUpdated");
