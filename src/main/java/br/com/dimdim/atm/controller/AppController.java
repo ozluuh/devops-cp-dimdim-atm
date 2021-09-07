@@ -16,7 +16,6 @@ import br.com.dimdim.atm.model.BankStatement;
 import br.com.dimdim.atm.model.Customer;
 import br.com.dimdim.atm.model.TransactionType;
 import br.com.dimdim.atm.repository.BankStatementRepository;
-import br.com.dimdim.atm.repository.CustomerRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -32,8 +31,6 @@ public class AppController {
 	private static final String CUSTOMER_ATTRIBUTE = "customer";
 
 	private final BankStatementRepository bankRepo;
-
-	private final CustomerRepository repo;
 
 	@PostMapping("/validation")
 	public String validation(HttpSession session) {
@@ -100,9 +97,8 @@ public class AppController {
 			log.info("Withdraw realized");
 		}
 		statement.setBalance(customer.getAccount().getBalance());
-		log.info("TransactionPost: {}", statement);
+		log.debug("TransactionPost: {}", statement);
 
-		// repo.save(customer);
 		bankRepo.save(statement);
 		log.info("Statement registered");
 
