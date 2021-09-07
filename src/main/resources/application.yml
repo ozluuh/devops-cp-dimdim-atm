@@ -3,7 +3,15 @@ spring:
     url: jdbc:h2:mem:atm
     username: sa
     password: sa
-  h2:
-    console:
-      enabled: true
-      path: /db-ui
+  jpa:
+    hibernate:
+      ddl-auto: update
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
