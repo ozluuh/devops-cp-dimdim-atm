@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import br.com.dimdim.atm.model.BankStatement;
 import br.com.dimdim.atm.model.Customer;
@@ -103,6 +104,12 @@ public class AppController {
 		log.info("Statement registered");
 
 		return "redirect:/app";
+	}
+
+	@GetMapping("/profile")
+	public ModelAndView profile(HttpSession session){
+		session.setAttribute(CUSTOMER_ATTRIBUTE, customer);
+		return new ModelAndView("forward:/customer");
 	}
 
 }

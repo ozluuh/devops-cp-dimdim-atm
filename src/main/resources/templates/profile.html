@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org" th:replace="layouts/base :: layout(~{::title}, ~{::main}, profile)">
+    <title>Perfil | ATM</title>
+    <body>
+        <main class="card mx-auto p-3">
+            <form method="POST" action="/customer" data-th-object="${customer}" autocomplete="off">
+                <fieldset>
+                    <legend>Dados Pessoais</legend>
+                    <input type="hidden" name="id" data-th-field="*{id}" />
+                    <div class="form-group row">
+                        <label for="value" class="col-sm-2 col-form-label">Nome</label>
+                        <div class="col-sm-10">
+                            <input
+                                name="name"
+                                type="text"
+                                class="form-control"
+                                id="name"
+                                maxlength="25"
+                                data-th-field="*{name}"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="description" class="col-sm-2 col-form-label">Sobrenome</label>
+                        <div class="col-sm-10">
+                            <input
+                                name="surname"
+                                type="text"
+                                class="form-control"
+                                id="surname"
+                                data-th-field="*{surname}"
+                                maxlength="100"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="type" class="col-sm-2 col-form-label">Sexo</label>
+                        <div class="col-sm-10">
+                            <select name="type" id="type" class="custom-select" data-th-field="*{sex}">
+                                <option value="F">Feminino</option>
+                                <option value="M">Masculino</option>
+                                <option value="X">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dados Bancários</legend>
+
+                    <input type="hidden" name="id" data-th-field="*{account.id}" readonly />
+
+                    <div class="form-group row">
+                        <label for="accountAgency" class="col-sm-2 col-form-label">Agência</label>
+                        <div class="col-sm-10">
+                            <input
+                                type="text"
+                                name="agency"
+                                class="form-control"
+                                id="accountAgency"
+                                data-th-field="*{account.agency}"
+                                required
+                                readonly
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="accountNumber" class="col-sm-2 col-form-label">Conta</label>
+                        <div class="col-sm-10">
+                            <input
+                                type="text"
+                                name="number"
+                                class="form-control"
+                                id="accountNumber"
+                                data-th-field="*{account.number}"
+                                required
+                                readonly
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="accountBalance" class="col-sm-2 col-form-label">Saldo</label>
+                        <div class="col-sm-10">
+                            <input
+                                type="hidden"
+                                name="balance"
+                                data-th-field="*{account.balance}"
+                                required
+                                readonly
+                            />
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="accountBalance"
+                                data-th-value="*{#numbers.formatDecimal(account.balance, 1, 'POINT', 2, 'COMMA')}"
+                                readonly
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="accountLimit" class="col-sm-2 col-form-label">Limite <span class="badge badge-dark" data-th-text="*{account.type.getDisplay()}">DEFAULT</span></label>
+                        <div class="col-sm-10">
+                            <input
+                                type="hidden"
+                                name="accountLimit"
+                                data-th-field="*{account.accountLimit}"
+                                required
+                                readonly
+                            />
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="accountLimit"
+                                data-th-value="*{#numbers.formatDecimal(account.accountLimit, 1, 'POINT', 2, 'COMMA')}"
+                                readonly
+                            />
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="accountType" data-th-field="*{account.type}" readonly>
+                </fieldset>
+
+                <button type="submit" class="btn btn-primary float-right">Confirmar</button>
+                <a class="btn btn-outline-danger float-right mx-2" data-th-href="@{/app}">Cancelar</a>
+            </form>
+        </main>
+    </body>
+</html>
