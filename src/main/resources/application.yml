@@ -1,11 +1,13 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:atm
-    username: sa
-    password: sa
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@<HOST>:<PORT>:<DATABASE_NAME>
+    username: <USER>
+    password: <PASSWORD>
   jpa:
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.Oracle10gDialect
 logging:
   level:
     org:
